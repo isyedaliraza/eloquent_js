@@ -333,3 +333,47 @@ console.log("7".padStart(4, "0"));
 console.log("Hello I am a Software Engineer.".split(" ").join("+"));
 
 console.log("HA".repeat(3));
+
+function max(...numbers) {
+  let result = -Infinity;
+  for (let number of numbers) {
+    if (number > result) result = number;
+  }
+  return result;
+}
+
+console.log(max(1, -10, 300, 2, 3, 7, 88));
+let listOfNumbers = [10, -10, 30, 20, 33, 87, 109, 6, 32, 3, 4, 98];
+console.log(max(...listOfNumbers));
+let words = ["Hello", "there"];
+console.log(["What", ...words, "animal"]);
+let test = { x: 0, y: 10 };
+console.log({ ...test, y: 20, z: 30 });
+
+function generateRandomWholeNumberTill(number) {
+  return Math.floor(Math.random() * number);
+}
+
+console.log(Math.random());
+console.log(Math.floor(Math.random() * 100));
+console.log(generateRandomWholeNumberTill(50));
+
+let [a, b, c] = [1, 2, 3];
+console.log(a);
+console.log(b);
+console.log(c);
+
+let obj = { n: "Fajita", age: 30 };
+let { n } = obj;
+console.log(n);
+
+console.log(obj.address?.city);
+console.log("".notAStringMethod?.());
+
+let string = JSON.stringify({
+  squirrel: false,
+  events: ["peanuts", "brushed teeth", "pizza", "exercise"],
+});
+
+console.log(string);
+console.log(JSON.parse(string).events);
