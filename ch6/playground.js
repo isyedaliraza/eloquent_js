@@ -114,3 +114,75 @@ let object = new (class {
 })();
 
 console.log(object.getWord());
+
+// Private properties in javascript can be defined with # before the name
+
+class SecretiveObject {
+  #getSecret() {
+    return "I ate all the plums";
+  }
+
+  interrogate() {
+    let shallISayIt = this.#getSecret(); // type: ignore
+    return "never";
+  }
+}
+
+let secretiveObj = new SecretiveObject();
+console.log(secretiveObj.interrogate());
+
+// Properties can be overrided by redefining them
+
+Rabbit.prototype.teeth = "small";
+console.log(killerRabbit.teeth);
+killerRabbit.teeth = "long, sharp and bloody";
+console.log(killerRabbit.teeth);
+console.log(new Rabbit("basic").teeth);
+console.log(Rabbit.prototype.teeth);
+
+// Array has prototyped its own toString method
+
+console.log(Object.prototype.toString == Array.prototype.toString);
+console.log([1, 2].toString());
+console.log(Object.prototype.toString.call([1, 2]));
+
+// In JavaScript we can use objects to map values to keys for example
+
+let ages = {
+  Julia: 60,
+  Jack: 30,
+  Borris: 10,
+};
+
+console.log(`Julia age is ${ages["Julia"]}`);
+console.log(`Is Jack's age known? ${"Jack" in ages}`); // ––> true
+console.log(`Is toString's age known? ${"toString" in ages}`); // ——> true
+
+// Because object keys are the property names it is dangerous to use it as a map
+// Also, toString comes from Object.prototype and is not a key we wanted.
+
+// One solution is to use the Object.create(null) it will give us an object
+// without the Object.prototype
+
+console.log(`Is toString's age known? ${"toString" in Object.create(null)}`);
+
+// JavaScript offers a special data structure [Map] which can be used to map values
+// to the keys. [Map] also takes keys of any type whereas [Object] properties can be
+// strings only.
+
+let mappedAges = new Map();
+mappedAges.set("Julia", 60);
+mappedAges.set("Borris", 10);
+mappedAges.set("Jack", 30);
+
+console.log(`What is Julia's age? ${mappedAges.get("Julia")}`); // ——> 60
+console.log(`Is Jack's age known? ${mappedAges.has("Jack")}`); // ——> true
+console.log(`Is toString's age known? ${mappedAges.has("toString")}`); // ——> false
+
+// Object has a method [Object.keys] which returns object properties only
+// without prototype properties
+console.log(Object.keys(ages));
+
+// Object has a method [Object.hasOwn] which checks for a key presence without
+// taking prototype properties into account.
+console.log(Object.hasOwn(ages, "toString")); // ——> false
