@@ -186,3 +186,135 @@ console.log(Object.keys(ages));
 // Object has a method [Object.hasOwn] which checks for a key presence without
 // taking prototype properties into account.
 console.log(Object.hasOwn(ages, "toString")); // ——> false
+
+// In JavaScript we have String function that converts an object to its
+// meaningful string representation by calling object's [toString] method
+
+console.log(String(mappedAges));
+
+// Now some types have their own implementation of toString method
+// for example Arrays
+
+console.log(String([1, 2, 3])); // —> 1, 2, 3
+
+// Poly means many and morph means form, polymorphism is a powerful
+// concept where different types or classes conform to same interface
+// while providing their own implementations. If a code works with
+// one type we can plug in other types and the code will work fine.
+
+Rabbit.prototype.toString = function () {
+  return `a ${this.type} rabbit`;
+};
+
+console.log(String(killerRabbit));
+
+// We can add properties in an object that are not stored directly
+
+class Temperature {
+  constructor(celsius) {
+    this.celsius = celsius;
+  }
+
+  get fahrenheit() {
+    return this.celsius * 1.8 + 32;
+  }
+
+  set fahrenheit(value) {
+    this.celsius = (value - 32) / 1.8;
+  }
+
+  static fromFahrenheit(value) {
+    return new Temperature((value - 32) / 1.8);
+  }
+}
+
+let temp = new Temperature(22);
+console.log(temp.fahrenheit);
+temp.fahrenheit = 99;
+console.log(temp.celsius);
+
+let boil = Temperature.fromFahrenheit(212);
+console.log(boil.celsius);
+
+// In 2015 symbols were added in JavaScript
+// Because it was difficult for an object to conform to two
+// interfaces with same property names
+let length = Symbol("length");
+
+let myTrip = {
+  length: 2,
+  0: "John",
+  1: "Doe",
+  [length]: 2025,
+};
+
+console.log(myTrip.length, myTrip[length]);
+
+class List {
+  constructor(value, rest) {
+    this.value = value;
+    this.rest = rest;
+  }
+
+  get length() {
+    return 1 + (this.rest ? this.rest.length : 0);
+  }
+
+  static fromArray(array) {
+    let rest = null;
+    for (let i = array.length - 1; i >= 0; i--) {
+      rest = new this(array[i], rest);
+    }
+    return rest;
+  }
+}
+
+class ListIterator {
+  constructor(list) {
+    this.list = list;
+  }
+
+  next() {
+    if (this.list == null) {
+      return { done: true };
+    }
+
+    let value = this.list.value;
+    this.list = this.list.rest;
+    return { value, done: false };
+  }
+}
+
+List.prototype[Symbol.iterator] = function () {
+  return new ListIterator(this);
+};
+
+let list = List.fromArray([1, 2, 3]);
+for (let item of list) {
+  console.log(item);
+}
+
+// Iterable objects also work with spread operator ...
+console.log([..."PCI"]);
+
+// We can use extend to create a sub-class that inherits
+// the properties of it's super-class
+
+class LengthList extends List {
+  #length;
+  constructor(value, rest) {
+    super(value, rest);
+    this.#length = super.length;
+  }
+
+  get length() {
+    return this.#length;
+  }
+}
+
+console.log(LengthList.fromArray([1, 2, 3]).length);
+
+// We can check whether an object is derived from a class
+// using instanceof operator
+
+console.log([1, 2, 3] instanceof Array); // —> true
